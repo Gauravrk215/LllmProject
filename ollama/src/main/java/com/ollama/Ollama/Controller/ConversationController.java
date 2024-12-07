@@ -16,37 +16,55 @@ import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvis
 import com.ollama.Ollama.model.ChatResponse;
 import com.ollama.Ollama.model.QueryRequest;
 
+/**
+ * Controller class for managing conversational interactions using chat memory.
+ * Provides an endpoint for handling chat requests with memory context.
+ */
 @RestController
 public class ConversationController {
 
-    private final ChatClient chatClient;
+	/** Chat client for handling prompts and responses with memory advisors. */
+	private final ChatClient chatClient;
 
-    public ConversationController(ChatClient.Builder builder) {
-        InMemoryChatMemory memory = new InMemoryChatMemory();
-        this.chatClient = builder.
-                defaultAdvisors(
-                  new PromptChatMemoryAdvisor(memory),
-                  new MessageChatMemoryAdvisor(memory)
-                )
-                .build();
-    }
+	/**
+	 * Constructor to initialize the ChatClient with in-memory chat memory and
+	 * advisors.
+	 *
+	 * @param builder A builder instance for configuring the ChatClient.
+	 */
+	public ConversationController(ChatClient.Builder builder) {
+		InMemoryChatMemory memory = new InMemoryChatMemory();
+		this.chatClient = builder
+				.defaultAdvisors(new PromptChatMemoryAdvisor(memory), new MessageChatMemoryAdvisor(memory)).build();
+	}
 
-    @PostMapping("/chatMemory")
-    public ChatResponse chatMemory(@RequestBody QueryRequest request) {
-        if (request.getConversationId() == null || request.getConversationId().isEmpty()) {
-            request.setConversationId(UUID.randomUUID().toString());
-        }
-        String content = this.chatClient.prompt()
-                .user(request.getQuery())
-                .advisors(a -> a
-                        .param(CHAT_MEMORY_CONVERSATION_ID_KEY, request.getConversationId())
-                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
-                .call().content();
+	/**
+	 * API endpoint to handle chat requests with memory context. If the conversation
+	 * ID is not provided, a new conversation ID is generated. The chat memory is
+	 * used to store and retrieve context for ongoing conversations.
+	 *
+	 * @param request The {@link QueryRequest} containing the conversation ID and
+	 *                user query.
+	 * @return a {@link ChatResponse} object with the conversation ID and the
+	 *         AI-generated response.
+	 */
+	@PostMapping("/chatMemory")
+	public ChatResponse chatMemory(@RequestBody QueryRequest request) {
+		if (request.getConversationId() == null || request.getConversationId().isEmpty()) {
+			request.setConversationId(UUID.randomUUID().toString());
+		}
 
-        ChatResponse chatResponse = new ChatResponse();
-        chatResponse.setResponseContent(content);
-        chatResponse.setConversationId(request.getConversationId());
+		// Process the user query with chat memory and advisors
+		String content = this.chatClient.prompt().user(request.getQuery())
+				.advisors(a -> a.param(CHAT_MEMORY_CONVERSATION_ID_KEY, request.getConversationId())
+						.param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
+				.call().content();
 
-        return chatResponse;
-    }
+		// Prepare and return the chat response
+		ChatResponse chatResponse = new ChatResponse();
+		chatResponse.setResponseContent(content);
+		chatResponse.setConversationId(request.getConversationId());
+
+		return chatResponse;
+	}
 }
