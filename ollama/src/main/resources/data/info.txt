@@ -1,0 +1,35 @@
+
+Learn and memorize the following prompt:
+Create an wireframe for a construction company to manage their leads. The application name is ConstroCRM. This is a CRM application that has features and modules like Lead Management, Deals Management, Channel Partner Management, Contacts Management, Accounts Management, Workflows, and Sales-Related Reports.
+UI-related instructions:
+1. For each module, list all the UIs categorized into Masters, Transactions, and Setups.
+2. For each UI, provide the names of all fields along with their data types (e.g., text, number, dropdown, date, etc.) and specify whether each field is mandatory or optional.
+3. Include modules and related UIs for:
+Lead Management: Features like lead capture, qualification, and assignment.
+Deals Management: Tracking deals through various stages and forecasting.
+Channel Partner Management: Partner onboarding, activity tracking, and performance metrics.
+Contacts Management: Adding, updating, and grouping contacts.
+Accounts Management: Company-level data and associated contacts or activities.
+Workflows: Automated processes for approvals and notifications.
+Reports: Customized sales reports for each salesperson, sales zone, and product family.
+4. Do not include any UI for user management, security management, role management, log management
+
+
+Use angular clarity as frontend, spring boot as backend, and mysql as data base
+
+
+
+Here 
+Project name - ConstroCRM
+Category - CRM
+Brief description - CRM for a ConstroCRM company
+frontendTech -angular clarity
+backendTech -spring boot
+databaseTech - mysql
+Visibility by default false
+
+
+Wireframe name - Lead Management, Deals Management, Channel Partner Management, Contacts Management, Accounts Management, Workflows, and Sales-Related Reports
+Default field name is name as text, description as paragraph , isactive as boolean and startdate as date and end date as date include these field and if he give addition field then include that field also,,
+
+Give a proper json for this if it include in last json keyword..
